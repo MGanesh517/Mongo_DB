@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-
-
-
 class MongoDatabase {
   static var db, userCollection;
   static bool isConnected = false;
@@ -27,7 +24,8 @@ class MongoDatabase {
   static Future<List<Map<String, dynamic>>> getDocuments() async {
     try {
       if (!isConnected) {
-        debugPrint("Warning: Database not connected. Attempting to reconnect...");
+        debugPrint(
+            "Warning: Database not connected. Attempting to reconnect...");
         await connect();
       }
       final users = await userCollection.find().toList();
@@ -91,7 +89,11 @@ class MongoDatabase {
 }
 
 class UserCard extends StatelessWidget {
-  UserCard({required this.user, required this.onTapDelete, required this.onTapEdit});
+  const UserCard(
+      {super.key,
+      required this.user,
+      required this.onTapDelete,
+      required this.onTapEdit});
   final User user;
   final GestureTapCallback onTapEdit, onTapDelete;
 
@@ -111,12 +113,12 @@ class UserCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             GestureDetector(
-              child: Icon(Icons.edit),
               onTap: onTapEdit,
+              child: const Icon(Icons.edit),
             ),
             GestureDetector(
-              child: Icon(Icons.delete),
               onTap: onTapDelete,
+              child: const Icon(Icons.delete),
             ),
           ],
         ),
@@ -125,8 +127,8 @@ class UserCard extends StatelessWidget {
   }
 }
 
-
-const MONGO_CONN_URL = "mongodb+srv://ganeshabsolin517:Ganesh.517@cluster0.s95ts.mongodb.net/Mongo_DB";
+const MONGO_CONN_URL =
+    "mongodb+srv://ganeshabsolin517:Ganesh.517@cluster0.s95ts.mongodb.net/Mongo_DB";
 const USER_COLLECTION = "users";
 
 class User {
@@ -135,7 +137,11 @@ class User {
   final int age;
   final int phone;
 
-  const User({required this.id, required this.name, required this.age, required this.phone});
+  const User(
+      {required this.id,
+      required this.name,
+      required this.age,
+      required this.phone});
 
   Map<String, dynamic> toMap() {
     return {
