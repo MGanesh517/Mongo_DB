@@ -128,7 +128,7 @@ class UserCard extends StatelessWidget {
 }
 
 const MONGO_CONN_URL =
-    "mongodb+srv://ganeshabsolin517:Ganesh.517@cluster0.s95ts.mongodb.net/Mongo_DB";
+    "mongodb+srv://Ganesh517:Absolin.517@cluster0.s95ts.mongodb.net/Mongo_DB";
 const USER_COLLECTION = "users";
 
 class User {

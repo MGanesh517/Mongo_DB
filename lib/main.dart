@@ -138,8 +138,6 @@
 
 ////// Button Connect
 
-
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -153,8 +151,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        getPages: AppPages.pages,
-
+      getPages: AppPages.pages,
       debugShowCheckedModeBanner: false,
       title: 'Mongo_DBx',
       theme: ThemeData(
@@ -169,7 +166,6 @@ class MyApp extends StatelessWidget {
 Future<void> main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    
     runApp(const MyApp());
   }, (error, stackTrace) {
     debugPrint('Error in runZonedGuarded: $error');
@@ -189,13 +185,25 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isDatabaseConnected = false;
 
   Future<void> connectToDatabase() async {
-    bool connected = await MongoDatabase.connect();
-    setState(() {
-      isDatabaseConnected = connected;
-      Get.toNamed('/counterScreen');
-    });
-    if (!connected) {
-      debugPrint("Failed to connect to MongoDB.");
+    try {
+      bool connected = await MongoDatabase.connect();
+      if (connected) {
+        setState(() {
+          isDatabaseConnected = true;
+        });
+        // Navigate to the next screen only if connected
+        Get.toNamed('/counterScreen');
+      } else {
+        debugPrint("Failed to connect to MongoDB.");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Database connection failed")),
+        );
+      }
+    } catch (e) {
+      debugPrint("Error while connecting to database: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("An error occurred")),
+      );
     }
   }
 
@@ -220,10 +228,11 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Visibility(
               visible: !isDatabaseConnected,
-              child: const Text('Press the button to connect to the database:')),
+              child: const Text('Press the button to connect to the database:'),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: connectToDatabase,
+              onPressed: isDatabaseConnected ? null : connectToDatabase,
               child: Text(isDatabaseConnected ? 'Connected' : 'Press To Connect'),
             ),
             const SizedBox(height: 20),
